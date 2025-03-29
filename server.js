@@ -1,18 +1,12 @@
-// server/server.js
 import express from 'express';
 import cors from 'cors';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 import todoRoutes from './routes/todoRoutes.js';
+import noteRoutes from './routes/noteRoutes.js'; // Import note routes
 
-// ES Module fix for __dirname
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Load environment variables - specify the path to .env file
-dotenv.config({ path: path.resolve(__dirname, './.env') });
+// Load environment variables
+dotenv.config();
 
 const app = express();
 
@@ -22,6 +16,7 @@ app.use(express.json());
 
 // Routes
 app.use('/api/todos', todoRoutes);
+app.use('/api/notes', noteRoutes); // Add note routes
 
 // 404 handler for API routes
 app.all('/api/*', (req, res) => {
@@ -31,11 +26,10 @@ app.all('/api/*', (req, res) => {
 // Root route for API status
 app.get('/', (req, res) => {
   res.status(200).json({ 
-    message: 'Todo API server is running',
+    message: 'Todo and Notes API server is running',
     version: '1.0.0'
   });
 });
-
 
 // Ensure the database connection is established before starting the server
 (async () => {
@@ -48,6 +42,6 @@ app.get('/', (req, res) => {
     });
   } catch (error) {
     console.error('Failed to connect to the database:', error);
-    process.exit(1); // Exit the process with failure
+    process.exit(1);
   }
 })();
