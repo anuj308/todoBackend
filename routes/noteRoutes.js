@@ -7,25 +7,27 @@ import {
   deleteNote,
   searchNotes
 } from '../controllers/noteController.js';
+import { protect } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
+// Apply protect middleware to all routes
 // Get all notes
-router.get('/', getNotes);
+router.get('/', protect, getNotes);
 
 // Search notes
-router.get('/search', searchNotes);
+router.get('/search', protect, searchNotes);
 
 // Get a specific note
-router.get('/:id', getNoteById);
+router.get('/:id', protect, getNoteById);
 
 // Create a new note
-router.post('/', createNote);
+router.post('/', protect, createNote);
 
 // Update a note
-router.put('/:id', updateNote);
+router.put('/:id', protect, updateNote);
 
 // Delete a note
-router.delete('/:id', deleteNote);
+router.delete('/:id', protect, deleteNote);
 
 export default router;

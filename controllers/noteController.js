@@ -3,8 +3,8 @@ import Note from '../models/noteModel.js';
 // Get all notes for a user
 export const getNotes = async (req, res) => {
   try {
-    // In a real app, get userId from auth middleware
-    const userId = req.query.userId || 'default-user';
+    // Get userId from authenticated user (provided by protect middleware)
+    const userId = req.user.id;
     
     const notes = await Note.find({ userId })
       .sort({ updatedAt: -1 })
@@ -20,8 +20,8 @@ export const getNotes = async (req, res) => {
 export const getNoteById = async (req, res) => {
   try {
     const { id } = req.params;
-    // In a real app, get userId from auth middleware
-    const userId = req.query.userId || 'default-user';
+    // Get userId from authenticated user (provided by protect middleware)
+    const userId = req.user.id;
     
     const note = await Note.findOne({ _id: id, userId });
     
@@ -40,8 +40,8 @@ export const createNote = async (req, res) => {
   try {
     const { title, content = '' } = req.body;
     
-    // In a real app, get userId from auth middleware
-    const userId = req.body.userId || 'default-user';
+    // Get userId from authenticated user (provided by protect middleware)
+    const userId = req.user.id;
     
     if (!title) {
       return res.status(400).json({ message: 'Title is required' });
@@ -67,15 +67,15 @@ export const updateNote = async (req, res) => {
     const { id } = req.params;
     const updates = req.body;
     
-    // In a real app, get userId from auth middleware
-    const userId = req.body.userId || 'default-user';
+    // Get userId from authenticated user (provided by protect middleware)
+    const userId = req.user.id;
     
     // Make sure updatedAt is updated
     updates.updatedAt = new Date();
     
     const note = await Note.findOneAndUpdate(
       { _id: id, userId },
-      updates,
+      { ...updates, userId },
       { new: true, runValidators: true }
     );
     
@@ -94,8 +94,8 @@ export const deleteNote = async (req, res) => {
   try {
     const { id } = req.params;
     
-    // In a real app, get userId from auth middleware
-    const userId = req.query.userId || 'default-user';
+    // Get userId from authenticated user (provided by protect middleware)
+    const userId = req.user.id;
     
     const note = await Note.findOneAndDelete({ _id: id, userId });
     
@@ -114,8 +114,8 @@ export const searchNotes = async (req, res) => {
   try {
     const { query } = req.query;
     
-    // In a real app, get userId from auth middleware
-    const userId = req.query.userId || 'default-user';
+    // Get userId from authenticated user (provided by protect middleware)
+    const userId = req.user.id;
     
     if (!query) {
       return res.status(400).json({ message: 'Search query is required' });

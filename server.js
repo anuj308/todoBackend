@@ -3,7 +3,10 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 import todoRoutes from './routes/todoRoutes.js';
-import noteRoutes from './routes/noteRoutes.js'; // Import note routes
+import noteRoutes from './routes/noteRoutes.js';
+import userRoutes from './routes/userRoutes.js'; // Import user routes
+
+console.log('Server starting up - this is a test log'); // Test log
 
 // Load environment variables
 dotenv.config();
@@ -16,7 +19,8 @@ app.use(express.json());
 
 // Routes
 app.use('/api/todos', todoRoutes);
-app.use('/api/notes', noteRoutes); // Add note routes
+app.use('/api/notes', noteRoutes);
+app.use('/api/users', userRoutes); // Add user routes
 
 // 404 handler for API routes
 app.all('/api/*', (req, res) => {
